@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.DishMapper">
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id">
+        insert into sky_take_out.dish
+(sky_take_out.dish.id, sky_take_out.dish.name, sky_take_out.dish.category_id, sky_take_out.dish.price,
+ sky_take_out.dish.image, sky_take_out.dish.description, sky_take_out.dish.status)
+ values (
+         #{id}, #{name}, #{categoryId}, #{price}, #{image}, #{description}, #{status}
+        )
+    </insert>
+</mapper>

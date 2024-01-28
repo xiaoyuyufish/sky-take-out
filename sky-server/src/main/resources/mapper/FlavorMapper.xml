@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.sky.mapper.FlavorMapper">
+    <insert id="insertBatch">
+        insert into sky_take_out.dish_flavor (sky_take_out.dish_flavor.dish_id, sky_take_out.dish_flavor.name,
+                                              sky_take_out.dish_flavor.value)
+        values
+        <foreach collection="flavors" item="df" separator=",">
+            (#{dishId}, #{name}, #{value})
+        </foreach>
+    </insert>
+</mapper>
