@@ -1,6 +1,8 @@
 package com.sky.mapper;
 
+import com.github.pagehelper.Page;
 import com.sky.annotation.Autofill;
+import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Mapper;
@@ -8,6 +10,8 @@ import org.apache.ibatis.annotations.Select;
 
 @Mapper
 public interface DishMapper {
+
+    Page dishPageQuery(DishPageQueryDTO dishPageQueryDTO);
 
     /**
      * 根据分类id查询菜品数量
