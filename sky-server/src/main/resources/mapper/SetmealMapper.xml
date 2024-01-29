@@ -11,6 +11,13 @@
             values (#{categoryId}, #{name}, #{price}, #{status}, #{description}, #{image},
                     #{createTime}, #{createUser}, #{updateTime}, #{updateUser})
     </insert>
+    <delete id="deleteByIds">
+        delete from sky_take_out.setmeal
+        <where>
+
+            <foreach collection="ids" item="id" separator="," open="(" close=")"></foreach>
+        </where>
+    </delete>
     <select id="pageQuery" resultType="com.sky.entity.Setmeal">
         select * from sky_take_out.setmeal
         <where>
