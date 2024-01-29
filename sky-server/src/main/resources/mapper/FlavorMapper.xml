@@ -7,7 +7,7 @@
                                               sky_take_out.dish_flavor.value)
         values
         <foreach collection="flavors" item="df" separator=",">
-            (#{dishId}, #{name}, #{value})
+            (#{df.dishId}, #{df.name}, #{df.value})
         </foreach>
     </insert>
 </mapper>

@@ -5,6 +5,7 @@ import com.sky.annotation.Autofill;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.enumeration.OperationType;
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -28,4 +29,13 @@ public interface DishMapper {
      * */
     @Autofill(value = OperationType.INSERT)
     void insert(Dish dish);
+
+    @Select("select * from sky_take_out.dish where id = #{id}")
+    Dish getById(Long id);
+
+    @Delete("delete from sky_take_out.dish where id = #{id}")
+    void deleteById(Long id);
+
+    @Autofill(OperationType.UPDATE)
+    void update(Dish dish);
 }

@@ -2,14 +2,20 @@ package com.sky.service.impl;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
+import com.sky.constant.StatusConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
 import com.sky.entity.DishFlavor;
+import com.sky.entity.SetmealDish;
+import com.sky.exception.DeletionNotAllowedException;
 import com.sky.mapper.DishMapper;
 import com.sky.mapper.FlavorMapper;
+import com.sky.mapper.SetMealDishMapper;
 import com.sky.result.PageResult;
 import com.sky.service.DishService;
+import com.sky.vo.DishVO;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -28,6 +34,9 @@ public class DishServiceImpl implements DishService {
 
     @Resource
     private FlavorMapper flavorMapper;
+
+    @Resource
+    private SetMealDishMapper setMealDishMapper;
 
     /**
      * 新增菜品
@@ -70,4 +79,60 @@ public class DishServiceImpl implements DishService {
         Page page = dishMapper.dishPageQuery(dishPageQueryDTO);
         return new PageResult(page.getTotal(), page.getResult());
     }
+
+    @Override
+    public void deleteBatch(List<Long> ids) {
+
+        //检查是否起售
+        for(Long id : ids) {
+            Dish dish = dishMapper.getById(id);
+            if(dish.getStatus() == StatusConstant.ENABLE) {
+                throw new DeletionNotAllowedException(MessageConstant.DISH_ON_SALE);
+            }
+        }
+
+        //检查是否包含在套餐中
+        List<Long> setMealIds = setMealDishMapper.getSetMealIdsByDishId(ids);
+        log.info("ids = {}", setMealIds);
+        if(setMealIds != null && setMealIds.size() > 0) {
+            throw  new DeletionNotAllowedException(MessageConstant.SETMEAL_ENABLE_FAILED);
+        }
+
+        for(Long id : ids) {
+            dishMapper.deleteById(id);
+            flavorMapper.deleteByDishId(id);
+        }
+
+
+    }
+
+    @Override
+    public DishVO getByIdWithFlavor(Long id) {
+
+        Dish dish = dishMapper.getById(id);
+        List<DishFlavor> flavors = flavorMapper.getByDishId(id);
+
+        DishVO dishVO = new DishVO();
+        BeanUtils.copyProperties(dish, dishVO);
+        dishVO.setFlavors(flavors);
+
+        return dishVO;
+    }
+
+    @Override
+    public void updateWithFlavor(DishDTO dishDTO) {
+        Dish dish = new Dish();
+        BeanUtils.copyProperties(dishDTO, dish);
+
+        dishMapper.update(dish);
+
+        flavorMapper.deleteByDishId(dish.getId());
+
+        List<DishFlavor> flavors = dishDTO.getFlavors();
+        flavors.forEach(flavor->flavor.setDishId(dish.getId()));
+
+        flavorMapper.insertBatch(flavors);
+    }
+
+
 }
