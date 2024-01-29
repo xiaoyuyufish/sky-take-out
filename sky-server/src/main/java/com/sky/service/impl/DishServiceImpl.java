@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -132,6 +133,19 @@ public class DishServiceImpl implements DishService {
         flavors.forEach(flavor->flavor.setDishId(dish.getId()));
 
         flavorMapper.insertBatch(flavors);
+    }
+
+    @Override
+    public List<DishVO> getByCategoryId(Long categoryId) {
+        List<Dish> dishes = dishMapper.getByCategoryId(categoryId);
+        List<DishVO> dishVOS = new ArrayList<>();
+        for(Dish dish : dishes) {
+            DishVO dishVO = new DishVO();
+            BeanUtils.copyProperties(dish, dishVO);
+            dishVO.setFlavors(flavorMapper.getByDishId(dish.getId()));
+            dishVOS.add(dishVO);
+        }
+        return dishVOS;
     }
 
 

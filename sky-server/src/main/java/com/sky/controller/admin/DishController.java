@@ -3,6 +3,7 @@ package com.sky.controller.admin;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.sky.constant.MessageConstant;
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
@@ -14,6 +15,7 @@ import com.sky.service.impl.DishServiceImpl;
 import com.sky.vo.DishVO;
 import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
+import org.aspectj.apache.bcel.ExceptionConstants;
 import org.springframework.beans.BeanUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -60,6 +62,9 @@ public class DishController {
     public Result<DishVO> getById(@PathVariable Long id) {
         log.info("查询id为{}的菜品信息", id);
         DishVO dishVO = dishService.getByIdWithFlavor(id);
+        if (dishVO == null) {
+            dishVO = new DishVO();
+        }
 
         return Result.success(dishVO);
     }
@@ -73,5 +78,13 @@ public class DishController {
 
 
         return Result.success();
+    }
+
+    @GetMapping("/list")
+    @ApiOperation("根据类别查询菜品")
+    public Result<List<DishVO>> getByCategoryId(@RequestParam Long categoryId) {
+        List<DishVO> dishs= dishService.getByCategoryId(categoryId);
+
+        return Result.success(dishs);
     }
 }
