@@ -1,6 +1,8 @@
 package com.sky.mapper;
 
+import com.github.pagehelper.Page;
 import com.sky.annotation.Autofill;
+import com.sky.dto.SetmealPageQueryDTO;
 import com.sky.entity.Setmeal;
 import com.sky.enumeration.OperationType;
 import org.apache.ibatis.annotations.Insert;
@@ -21,4 +23,6 @@ public interface SetmealMapper {
 
     @Autofill(OperationType.INSERT)
     void save(Setmeal setmeal);
+
+    Page pageQuery(SetmealPageQueryDTO setmealPageQueryDTO);
 }
