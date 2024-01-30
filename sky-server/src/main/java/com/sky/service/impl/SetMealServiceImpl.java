@@ -77,4 +77,9 @@ public class SetMealServiceImpl implements SetMealService {
         }
 
     }
+
+    @Override
+    public void updateStatus(Long status, Long id) {
+        setmealMapper.updateStatus(status, id);
+    }
 }

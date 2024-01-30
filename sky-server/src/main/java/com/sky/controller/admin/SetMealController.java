@@ -47,4 +47,13 @@ public class SetMealController {
         setMealService.deleteBatch(ids);
         return Result.success();
     }
+
+    @PostMapping("/status/{status}")
+    @ApiOperation("修改起售、停售状态")
+    public Result updateStatus(@PathVariable Long status, @RequestParam Long id) {
+        log.info("修改起售、停售状态{}", status);
+
+        setMealService.updateStatus(status, id);
+        return Result.success();
+    }
 }
