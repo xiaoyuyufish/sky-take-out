@@ -11,5 +11,7 @@ sky:
       access-key-id: ${sky.alioss.access-key-id}
       access-key-secret: ${sky.alioss.access-key-secret}
       bucket-name: ${sky.alioss.bucket-name}
-    redis:
-
+  redis:
+    host: 192.168.217.128
+    port: 6379
+    password: root
