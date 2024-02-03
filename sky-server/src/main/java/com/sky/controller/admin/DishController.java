@@ -1,9 +1,6 @@
 package com.sky.controller.admin;
 
-import com.fasterxml.jackson.databind.util.BeanUtil;
-import com.github.pagehelper.Page;
-import com.github.pagehelper.PageHelper;
-import com.sky.constant.MessageConstant;
+
 import com.sky.dto.DishDTO;
 import com.sky.dto.DishPageQueryDTO;
 import com.sky.entity.Dish;
@@ -17,10 +14,12 @@ import io.swagger.annotations.ApiOperation;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.apache.bcel.ExceptionConstants;
 import org.springframework.beans.BeanUtils;
+import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/admin/dish")
@@ -30,12 +29,17 @@ public class DishController {
     @Resource
     private DishServiceImpl dishService;
 
+    @Resource
+    private RedisTemplate redisTemplate;
+
     @PostMapping
     @ApiOperation("新增菜品")
     public Result save(@RequestBody DishDTO dishDTO) {
         Dish dish = new Dish();
         BeanUtils.copyProperties(dishDTO, dish);
         dishService.saveWithFlavor(dishDTO);
+
+        redisTemplate.delete("dish_"+dishDTO.getCategoryId());
 
         return Result.success();
     }
@@ -54,6 +58,7 @@ public class DishController {
     public Result delete(@RequestParam List<Long> ids) {
 
         dishService.deleteBatch(ids);
+        deleteCache();
         return Result.success();
     }
 
@@ -75,7 +80,7 @@ public class DishController {
         log.info("修改菜品信息:{}", dishDTO);
 
         dishService.updateWithFlavor(dishDTO);
-
+        deleteCache();
 
         return Result.success();
     }
@@ -86,5 +91,12 @@ public class DishController {
         List<DishVO> dishs= dishService.getByCategoryId(categoryId);
 
         return Result.success(dishs);
+    }
+
+    public void deleteCache() {
+        Set keys = redisTemplate.keys("dish_*");
+        log.info("清理缓存：{}", keys);
+
+        redisTemplate.delete(keys);
     }
 }
