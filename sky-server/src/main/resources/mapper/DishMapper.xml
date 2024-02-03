@@ -35,11 +35,22 @@
             </if>
 
             <if test="categoryId != null">
-                and dish.categoryId = #{categoryId}
+                and dish.category_id = #{categoryId}
             </if>
 
             <if test="status != null">
                 and dish.status = #{status}
+            </if>
+        </where>
+    </select>
+    <select id="list" resultType="com.sky.entity.Dish">
+        select * from sky_take_out.dish
+        <where>
+            <if test="categoryId != null">
+                category_id = #{categoryId}
+            </if>
+            <if test="status != null">
+                and status = #{status}
             </if>
         </where>
     </select>
