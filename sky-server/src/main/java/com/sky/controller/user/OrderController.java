@@ -3,6 +3,7 @@ package com.sky.controller.user;
 import com.sky.dto.OrdersPageQueryDTO;
 import com.sky.dto.OrdersPaymentDTO;
 import com.sky.dto.OrdersSubmitDTO;
+import com.sky.entity.OrderDetail;
 import com.sky.result.PageResult;
 import com.sky.result.Result;
 import com.sky.service.OrderService;
@@ -56,5 +57,20 @@ public class OrderController {
         PageResult pageResult = orderService.pageQuery(ordersPageQueryDTO);
 
         return Result.success(pageResult);
+    }
+
+    @GetMapping("/orderDetail/{id}")
+    @ApiOperation("查询订单详情")
+    public Result<OrderDetail> getOrderDetail(@PathVariable Long id) {
+        OrderDetail orderDetail = orderService.getOrderDetail(id);
+
+        return Result.success(orderDetail);
+    }
+
+    @PostMapping("/cancel/{id}")
+    public Result cancelOrder(@PathVariable Long id) {
+        orderService.cancelOrder(id);
+
+        return Result.success();
     }
 }

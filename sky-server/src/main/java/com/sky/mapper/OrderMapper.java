@@ -20,4 +20,7 @@ public interface OrderMapper {
       * @param orders
       */
      void update(Orders orders);
+
+     @Select("select * from sky_take_out.orders where id = #{id}")
+     Orders getById(Long id);
 }

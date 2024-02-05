@@ -172,4 +172,19 @@ public class OrderServiceImpl implements OrderService {
 
         return pageResult;
     }
+
+    @Override
+    public OrderDetail getOrderDetail(Long id) {
+        OrderDetail orderDetail = orderDetailMapper.getById(id);
+        return orderDetail;
+    }
+
+    @Override
+    public void cancelOrder(Long id) {
+        Orders orders = orderMapper.getById(id);
+
+        orders.setStatus(Orders.CANCELLED);
+
+        orderMapper.update(orders);
+    }
 }
