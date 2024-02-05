@@ -9,4 +9,15 @@
     <select id="getByOpenId" resultType="com.sky.entity.User">
         select * from sky_take_out.user where openid = #{openid};
     </select>
+    <select id="pageQuery" resultType="com.sky.entity.Orders">
+        select * from sky_take_out.orders
+        <where>
+            <if test="userId">
+                user_id = #{userId}
+            </if>
+            <if test="phone">phone=#{phone}</if>
+            <if test="number">number=#{number}</if>
+            <if test="status">status=#{status}</if>
+        </where>
+    </select>
 </mapper>
