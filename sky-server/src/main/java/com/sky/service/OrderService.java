@@ -7,6 +7,7 @@ import com.sky.dto.OrdersSubmitDTO;
 import com.sky.entity.OrderDetail;
 import com.sky.result.PageResult;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 
 public interface OrderService {
@@ -43,4 +44,15 @@ public interface OrderService {
      * @param id
      * */
     void cancelOrder(Long id);
+
+    /**
+     * 再来一单
+     * @param id
+     * */
+    void reputation(Long id);
+
+    /**
+     * 订单统计
+     * */
+    OrderStatisticsVO statics();
 }

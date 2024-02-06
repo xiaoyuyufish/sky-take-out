@@ -73,4 +73,11 @@ public class OrderController {
 
         return Result.success();
     }
+
+    @PostMapping("/repetition/{id}")
+    public Result reputation(@PathVariable Long id) {
+        orderService.reputation(id);
+
+        return Result.success();
+    }
 }

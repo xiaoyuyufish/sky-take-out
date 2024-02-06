@@ -15,9 +15,9 @@
             <if test="userId">
                 user_id = #{userId}
             </if>
-            <if test="phone">phone=#{phone}</if>
-            <if test="number">number=#{number}</if>
-            <if test="status">status=#{status}</if>
+            <if test="phone">and phone=#{phone}</if>
+            <if test="number">and number=#{number}</if>
+            <if test="status">and status=#{status}</if>
         </where>
     </select>
 </mapper>

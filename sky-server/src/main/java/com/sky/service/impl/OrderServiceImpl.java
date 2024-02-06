@@ -16,6 +16,7 @@ import com.sky.result.PageResult;
 import com.sky.service.OrderService;
 import com.sky.utils.WeChatPayUtil;
 import com.sky.vo.OrderPaymentVO;
+import com.sky.vo.OrderStatisticsVO;
 import com.sky.vo.OrderSubmitVO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
@@ -165,7 +166,7 @@ public class OrderServiceImpl implements OrderService {
 
         //进行分页查询
         PageResult pageResult = new PageResult();
-        List<Orders> orders = userMapper.pageQuery(ordersPageQueryDTO);
+        List<Orders> orders = orderMapper.pageQuery(ordersPageQueryDTO);
         log.info("orders:{}", orders);
         pageResult.setRecords(orders);
         pageResult.setTotal(orders.size());
@@ -186,5 +187,32 @@ public class OrderServiceImpl implements OrderService {
         orders.setStatus(Orders.CANCELLED);
 
         orderMapper.update(orders);
+    }
+
+    @Override
+    public void reputation(Long id) {
+        Orders orders = orderMapper.getById(id);
+        OrderDetail orderDetail = orderDetailMapper.getById(id);
+        ArrayList<OrderDetail> orderDetails = new ArrayList<>();
+        orderDetails.add(orderDetail);
+
+        orderMapper.insert(orders);
+        orderDetailMapper.insert(orderDetails);
+    }
+
+    @Override
+    public OrderStatisticsVO statics() {
+        OrderStatisticsVO orderStatisticsVO = new OrderStatisticsVO();
+
+        Integer confirmed = orderMapper.getCountByStatus(Orders.CONFIRMED);
+        orderStatisticsVO.setConfirmed(confirmed);
+        orderStatisticsVO.setToBeConfirmed(
+                orderMapper.getCountByStatus(Orders.TO_BE_CONFIRMED)
+        );
+        orderStatisticsVO.setDeliveryInProgress(
+                orderMapper.getCountByStatus(Orders.DELIVERY_IN_PROGRESS)
+        );
+
+        return orderStatisticsVO;
     }
 }

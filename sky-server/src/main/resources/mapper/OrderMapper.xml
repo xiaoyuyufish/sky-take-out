@@ -42,4 +42,18 @@
         </set>
         where id = #{id}
     </update>
+    <select id="pageQuery" resultType="com.sky.entity.Orders">
+        select * from sky_take_out.orders
+        <where>
+            <if test="userId">
+                user_id = #{userId}
+            </if>
+            <if test="phone">and phone=#{phone}</if>
+            <if test="number">and number=#{number}</if>
+            <if test="status">and status=#{status}</if>
+        </where>
+    </select>
+    <select id="getCountByStatus" resultType="java.lang.Integer">
+        select count(*) from sky_take_out.orders where status = #{status}
+    </select>
 </mapper>
